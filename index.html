@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Detection System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .header-container {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .top-right-auth {
+            position: absolute;
+            top: 15px;
+            right: 40px;
+            display: flex;
+            gap: 15px;
+        }
+        .top-right-auth a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        .top-right-auth a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .app-title {
+            font-size: 2.5em;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .nav-buttons-container {
+            display: flex;
+            flex-wrap: wrap; /* Allow buttons to wrap */
+            justify-content: center; /* Center buttons horizontally */
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .nav-button {
+            padding: 10px 20px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+        }
+        .nav-button:hover {
+            background-color: #003d80;
+            transform: translateY(-2px);
+        }
+        .nav-button.active {
+            background-color: #ffc107;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .content-section {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .hidden {
+            display: none;
+        }
+
+        h2 {
+            text-align: center;
+            color: #0056b3;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .input-group input[type="text"],
+        .input-group input[type="number"],
+        .input-group input[type="email"],
+        .input-group input[type="tel"],
+        .input-group textarea,
+        .input-group select {
+            width: calc(100% - 24px);
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .input-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+         body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3;
+            margin-bottom: 30px;
+        }
+        .input-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result-section {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        .result-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #e9e9e9;
+        }
+        .result-item strong {
+            color: #0056b3;
+        }
+        .fraudulent {
+            color: #dc3545; /* Red for fraudulent */
+            font-weight: bold;
+        }
+        .not-fraudulent {
+            color: #28a745; /* Green for not fraudulent */
+            font-weight: bold;
+        }
+        .reasons-list {
+            list-style-type: disc;
+            margin-left: 20px;
+            padding-left: 0;
+            color: #555;
+        }
+        .reasons-list li {
+            margin-bottom: 5px;
+        }
+        #loadingSpinner {
+            display: none; /* Hidden by default */
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error-message {
+            color: #dc3545;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        /* Checkbox styling for Identity Theft */
+        .checkbox-group {
+            margin-bottom: 15px;
+        }
+        .checkbox-group label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2); /* Make checkbox slightly larger */
+        }
+        .success-message {
+            color: #28a745;
+            font-weight: bold;
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px solid #28a745;
+            background-color: #e6ffe6;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="top-right-auth">
+            <a href="#" class="auth-link">Login</a>
+            <a href="#" class="auth-link">Sign Up</a>
+        </div>
+        <div class="app-title">Fraud Detection System</div>
+        <div class="nav-buttons-container">
+            <a href="#" class="nav-button" data-target="urlDetectionContent">URL Detection</a>
+            <a href="#" class="nav-button" data-target="transactionFraudContent">Transaction Fraud</a>
+            <a href="#" class="nav-button" data-target="identityTheftContent">Identity Theft</a>
+            <a href="#" class="nav-button" data-target="reportFraudContent">Report Fraud</a>
+            <a href="#" class="nav-button" data-target="aboutUsContent">About Us</a>
+        </div>
+    </div>
+
+    <div id="mainContentArea">
+        <div id="urlDetectionContent" class="content-section">
+            <h2>URL Fraud Detection</h2>
+
+            <div class="input-section">
+            <input type="text" id="urlInput" placeholder="Enter URL to analyze (e.g., https://www.google.com)">
+            <button onclick="analyzeUrl()">Analyze URL</button>
+            <div id="loadingSpinner"></div>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+
+        <div id="results" class="result-section">
+            </div>
+        </div>
+
+        <div id="transactionFraudContent" class="content-section hidden">
+            <h2>Transaction Fraud Detection</h2>
+            <div class="input-group">
+                <label for="transactionAmount">Amount:</label>
+                <input type="number" id="transactionAmount" placeholder="e.g., 500.75" step="0.01" required>
+            </div>
+            <div class="input-group">
+                <label for="transactionLocation">Location:</label>
+                <input type="text" id="transactionLocation" placeholder="e.g., New York, Nigeria" required>
+            </div>
+            <div class="input-group">
+                <label for="transactionCardType">Card Type:</label>
+                <input type="text" id="transactionCardType" placeholder="e.g., Visa, Mastercard, Prepaid" required>
+            </div>
+
+            <div class="input-section">
+                <button onclick="analyzeTransaction()">Analyze Transaction</button>
+                <div id="transactionLoadingSpinner" class="loadingSpinner"></div>
+            </div>
+
+            <div id="transactionErrorMessage" class="error-message"></div>
+
+            <div id="transactionResults" class="result-section">
+                </div>
+        </div>
+
+        <div id="identityTheftContent" class="content-section hidden">
+            <h2>Identity Theft Indicators Check</h2>
+            <p>Select any indicators that apply to your situation:</p>
+            <div class="checkbox-group">
+                <label>
+                    <input type="checkbox" id="unusualCreditInquiry">
+                    Received an unusual credit inquiry or new account notification.
+                </label>
+                <label>
+                    <input type="checkbox" id="unrecognizedAccount">
+                    Discovered an unrecognized account opened in my name.
+                </label>
+                <label>
+                    <input type="checkbox" id="suspiciousMail">
+                    Received suspicious mail (e.g., debt collection for unknown accounts, pre-approved credit cards I didn't apply for).
+                </label>
+                <label>
+                    <input type="checkbox" id="dataBreachAlert">
+                    Received an alert that my information was part of a data breach.
+                </label>
+                <label>
+                    <input type="checkbox" id="unauthorizedAccess">
+                    Experienced unauthorized access attempts to my online accounts.
+                </label>
+                <label>
+                    <input type="checkbox" id="idStolen">
+                    My physical ID (driver's license, passport, etc.) was stolen.
+                </label>
+            </div>
+
+            <div class="input-section">
+                <button onclick="checkIdentityTheft()">Check Indicators</button>
+                <div id="identityLoadingSpinner" class="loadingSpinner"></div>
+            </div>
+
+            <div id="identityErrorMessage" class="error-message"></div>
+
+            <div id="identityResults" class="result-section">
+                </div>
+        </div>
+
+        <div id="reportFraudContent" class="content-section hidden">
+            <h2>Report Fraud Incident</h2>
+            <p>Please provide details about the fraud incident you experienced or witnessed.</p>
+            <div class="input-group">
+                <label for="fraudType">Type of Fraud:</label>
+                <input type="text" id="fraudType" placeholder="e.g., Phishing, Credit Card Fraud, Identity Theft" required>
+            </div>
+            <div class="input-group">
+                <label for="fraudDate">Date of Incident (optional):</label>
+                <input type="date" id="fraudDate">
+            </div>
+            <div class="input-group">
+                <label for="fraudDescription">Description of Incident:</label>
+                <textarea id="fraudDescription" placeholder="Provide as much detail as possible: what happened, when, where, how you found out, etc." required></textarea>
+            </div>
+            <div class="input-group">
+                <label for="contactName">Your Name (optional):</label>
+                <input type="text" id="contactName" placeholder="John Doe">
+            </div>
+            <div class="input-group">
+                <label for="contactEmail">Your Email (required for follow-up):</label>
+                <input type="email" id="contactEmail" placeholder="you@example.com" required>
+            </div>
+            <div class="input-group">
+                <label for="contactPhone">Your Phone (optional):</label>
+                <input type="tel" id="contactPhone" placeholder="+91-XXXXXXXXXX">
+            </div>
+
+            <div class="input-section">
+                <button onclick="submitFraudReport()">Submit Report</button>
+                <div id="reportLoadingSpinner" class="loadingSpinner"></div>
+            </div>
+
+            <div id="reportErrorMessage" class="error-message"></div>
+            <div id="reportSuccessMessage" class="success-message hidden"></div>
+
+            <div id="reportResults" class="result-section">
+                </div>
+        </div>
+
+        <div id="aboutUsContent" class="content-section hidden">
+            <h2>About Our Fraud Detection System</h2>
+            <p>Learn more about our mission, technology, and team dedicated to combating fraud.</p>
+        </div>
+    </div>
+
+    <script>
+        // Function to show a specific content section and highlight the active button
+        function showSection(sectionId, clickedButton = null) {
+            const contentSections = document.querySelectorAll('.content-section');
+            contentSections.forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            const navButtons = document.querySelectorAll('.nav-button');
+            navButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+            }
+
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+        }
+
+        // --- URL Analysis Function (Updated Endpoint) ---
+        async function analyzeUrl() {
+            const urlInput = document.getElementById('urlInput');
+            const url = urlInput.value.trim();
+            const resultsDiv = document.getElementById('urlResults');
+            const loadingSpinner = document.getElementById('urlLoadingSpinner');
+            const errorMessage = document.getElementById('urlErrorMessage');
+
+            resultsDiv.innerHTML = '';
+            errorMessage.textContent = '';
+
+            if (!url) {
+                errorMessage.textContent = 'Please enter a URL.';
+                return;
+            }
+
+            loadingSpinner.style.display = 'block';
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/analyze-url', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: url })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`HTTP error! Status: ${response.status} - ${errorData.error || response.statusText}`);
+                }
+
+                const data = await response.json();
+                displayUrlResults(data, url);
+
+            } catch (error) {
+                console.error('Error analyzing URL:', error);
+                errorMessage.textContent = `Failed to analyze URL: ${error.message}. Please ensure the backend server is running and accessible.`;
+            } finally {
+                loadingSpinner.style.display = 'none';
+            }
+        }
+
+        function displayUrlResults(data, originalUrl) {
+            const resultsDiv = document.getElementById('urlResults');
+            resultsDiv.innerHTML = '';
+
+            let resultHtml = `<div class="result-item"><strong>Original URL:</strong> ${originalUrl}</div>`;
+            const statusClass = data.is_fraudulent ? 'fraudulent' : 'not-fraudulent';
+            const statusText = data.is_fraudulent ? 'Likely FRAUDULENT' : 'Looks LEGITIMATE';
+
+            resultHtml += `<div class="result-item"><strong>Status:</strong> <span class="${statusClass}">${statusText}</span></div>`;
+
+            if (data.reasons && data.reasons.length > 0) {
+                resultHtml += `<div class="result-item"><strong>Reasons:</strong><ul class="reasons-list">`;
+                data.reasons.forEach(reason => {
+                    resultHtml += `<li>${reason}</li>`;
+                });
+                resultHtml += `</ul></div>`;
+            } else if (!data.is_fraudulent) {
+                 resultHtml += `<div class="result-item">No specific red flags found by current rules.</div>`;
+            }
+            resultsDiv.innerHTML = resultHtml;
+        }
+
+        // --- Transaction Analysis Function ---
+        async function analyzeTransaction() {
+            const amountInput = document.getElementById('transactionAmount');
+            const locationInput = document.getElementById('transactionLocation');
+            const cardTypeInput = document.getElementById('transactionCardType');
+
+            const amount = parseFloat(amountInput.value);
+            const location = locationInput.value.trim();
+            const cardType = cardTypeInput.value.trim();
+
+            const resultsDiv = document.getElementById('transactionResults');
+            const loadingSpinner = document.getElementById('transactionLoadingSpinner');
+            const errorMessage = document.getElementById('transactionErrorMessage');
+
+            resultsDiv.innerHTML = '';
+            errorMessage.textContent = '';
+
+            if (isNaN(amount) || amount <= 0) {
+                errorMessage.textContent = 'Please enter a valid positive amount.';
+                return;
+            }
+            if (!location) {
+                errorMessage.textContent = 'Please enter a location.';
+                return;
+            }
+            if (!cardType) {
+                errorMessage.textContent = 'Please enter a card type.';
+                return;
+            }
+
+            loadingSpinner.style.display = 'block';
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/analyze-transaction', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: amount, location: location, card_type: cardType })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`HTTP error! Status: ${response.status} - ${errorData.error || response.statusText}`);
+                }
+
+                const data = await response.json();
+                displayTransactionResults(data);
+
+            } catch (error) {
+                console.error('Error analyzing transaction:', error);
+                errorMessage.textContent = `Failed to analyze transaction: ${error.message}. Please ensure the backend server is running and accessible.`;
+            } finally {
+                loadingSpinner.style.display = 'none';
+            }
+        }
+
+        function displayTransactionResults(data) {
+            const resultsDiv = document.getElementById('transactionResults');
+            resultsDiv.innerHTML = '';
+
+            let resultHtml = `
+                <div class="result-item">
+                    <strong>Amount:</strong> $${data.transaction_details.amount.toFixed(2)}<br>
+                    <strong>Location:</strong> ${data.transaction_details.location}<br>
+                    <strong>Card Type:</strong> ${data.transaction_details.card_type}
+                </div>
+            `;
+
+            const statusClass = data.is_fraudulent ? 'fraudulent' : 'not-fraudulent';
+            const statusText = data.is_fraudulent ? 'Likely FRAUDULENT' : 'Looks LEGITIMATE';
+
+            resultHtml += `<div class="result-item"><strong>Status:</strong> <span class="${statusClass}">${statusText}</span></div>`;
+
+            if (data.reasons && data.reasons.length > 0) {
+                resultHtml += `<div class="result-item"><strong>Reasons:</strong><ul class="reasons-list">`;
+                data.reasons.forEach(reason => {
+                    resultHtml += `<li>${reason}</li>`;
+                });
+                resultHtml += `</ul></div>`;
+            } else if (!data.is_fraudulent) {
+                 resultHtml += `<div class="result-item">No specific red flags found by current rules.</div>`;
+            }
+            resultsDiv.innerHTML = resultHtml;
+        }
+
+        // --- NEW: Identity Theft Analysis Function ---
+        async function checkIdentityTheft() {
+            const indicators = {
+                unusual_credit_inquiry: document.getElementById('unusualCreditInquiry').checked,
+                unrecognized_account: document.getElementById('unrecognizedAccount').checked,
+                suspicious_mail: document.getElementById('suspiciousMail').checked,
+                data_breach_alert: document.getElementById('dataBreachAlert').checked,
+                unauthorized_access: document.getElementById('unauthorizedAccess').checked,
+                id_stolen: document.getElementById('idStolen').checked
+            };
+
+            const resultsDiv = document.getElementById('identityResults');
+            const loadingSpinner = document.getElementById('identityLoadingSpinner');
+            const errorMessage = document.getElementById('identityErrorMessage');
+
+            resultsDiv.innerHTML = '';
+            errorMessage.textContent = '';
+
+            // Check if at least one checkbox is selected
+            const anyChecked = Object.values(indicators).some(value => value === true);
+            if (!anyChecked) {
+                errorMessage.textContent = 'Please select at least one indicator to check.';
+                return;
+            }
+
+            loadingSpinner.style.display = 'block';
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/analyze-identity-theft', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(indicators)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`HTTP error! Status: ${response.status} - ${errorData.error || response.statusText}`);
+                }
+
+                const data = await response.json();
+                displayIdentityTheftResults(data);
+
+            } catch (error) {
+                console.error('Error checking identity theft indicators:', error);
+                errorMessage.textContent = `Failed to check indicators: ${error.message}. Please ensure the backend server is running and accessible.`;
+            } finally {
+                loadingSpinner.style.display = 'none';
+            }
+        }
+
+        function displayIdentityTheftResults(data) {
+            const resultsDiv = document.getElementById('identityResults');
+            resultsDiv.innerHTML = '';
+
+            const statusClass = data.is_compromised ? 'fraudulent' : 'not-fraudulent';
+            const statusText = data.is_compromised ? 'Potential Identity Theft Risk Detected!' : 'Low Identity Theft Risk (based on provided indicators)';
+
+            let resultHtml = `
+                <div class="result-item">
+                    <strong>Status:</strong> <span class="${statusClass}">${statusText}</span>
+                </div>
+            `;
+
+            if (data.reasons && data.reasons.length > 0) {
+                resultHtml += `<div class="result-item"><strong>Details:</strong><ul class="reasons-list">`;
+                data.reasons.forEach(reason => {
+                    resultHtml += `<li>${reason}</li>`;
+                });
+                resultHtml += `</ul></div>`;
+            }
+            resultsDiv.innerHTML = resultHtml;
+        }
+
+        // --- NEW: Report Fraud Function ---
+        async function submitFraudReport() {
+            const fraudType = document.getElementById('fraudType').value.trim();
+            const fraudDate = document.getElementById('fraudDate').value.trim();
+            const fraudDescription = document.getElementById('fraudDescription').value.trim();
+            const contactName = document.getElementById('contactName').value.trim();
+            const contactEmail = document.getElementById('contactEmail').value.trim();
+            const contactPhone = document.getElementById('contactPhone').value.trim();
+
+            const successMessageDiv = document.getElementById('reportSuccessMessage');
+            const errorMessageDiv = document.getElementById('reportErrorMessage');
+            const loadingSpinner = document.getElementById('reportLoadingSpinner');
+
+            successMessageDiv.classList.add('hidden');
+            errorMessageDiv.textContent = '';
+
+            // Basic client-side validation
+            if (!fraudType) {
+                errorMessageDiv.textContent = 'Please enter the type of fraud.';
+                return;
+            }
+            if (!fraudDescription) {
+                errorMessageDiv.textContent = 'Please provide a description of the incident.';
+                return;
+            }
+            if (!contactEmail && !contactPhone) {
+                errorMessageDiv.textContent = 'Please provide at least an email or phone number for follow-up.';
+                return;
+            }
+            if (contactEmail && !/\S+@\S+\.\S+/.test(contactEmail)) {
+                errorMessageDiv.textContent = 'Please enter a valid email address.';
+                return;
+            }
+
+            loadingSpinner.style.display = 'block';
+
+            const reportData = {
+                fraud_type: fraudType,
+                date_of_incident: fraudDate,
+                description: fraudDescription,
+                contact_name: contactName,
+                contact_email: contactEmail,
+                contact_phone: contactPhone
+            };
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/submit-fraud-report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(reportData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`HTTP error! Status: ${response.status} - ${errorData.error || response.statusText}`);
+                }
+
+                const data = await response.json();
+                successMessageDiv.textContent = `Report submitted successfully! Your report ID is: ${data.report_id}`;
+                successMessageDiv.classList.remove('hidden');
+
+                // Optionally clear the form after successful submission
+                document.getElementById('fraudType').value = '';
+                document.getElementById('fraudDate').value = '';
+                document.getElementById('fraudDescription').value = '';
+                document.getElementById('contactName').value = '';
+                document.getElementById('contactEmail').value = '';
+                document.getElementById('contactPhone').value = '';
+
+            } catch (error) {
+                console.error('Error submitting fraud report:', error);
+                errorMessageDiv.textContent = `Failed to submit report: ${error.message}. Please ensure the backend server is running.`;
+            } finally {
+                loadingSpinner.style.display = 'none';
+            }
+        }
+
+
+        // --- JavaScript for Navigation (remains largely the same) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const navButtons = document.querySelectorAll('.nav-button');
+
+            navButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const targetId = button.dataset.target;
+                    showSection(targetId, button);
+                });
+            });
+
+            // Show the URL Detection section by default on page load
+            const urlDetectionButton = document.querySelector('.nav-button[data-target="urlDetectionContent"]');
+            showSection('urlDetectionContent', urlDetectionButton);
+        });
+    </script>
+</body>
+</html>
