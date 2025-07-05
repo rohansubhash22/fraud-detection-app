@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Fraud Detection App</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .signup-container {
+            background: white;
+            width: 400px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2C3E50;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .error {
+            color: red;
+            font-size: 12px;
+            display: none; /* Hidden by default */
+        }
+
+        .password-strength {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #666;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background-color: #2C3E50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #1ABC9C;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .login-link a {
+            text-decoration: none;
+            color: #2980B9;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .message { /* For success/error messages from backend */
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="signup-container">
+        <h2>Sign Up</h2>
+        <form id="signupForm">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" required>
+            <span class="error" id="firstNameError">Please fill out this field.</span>
+
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" required>
+            <span class="error" id="lastNameError">Please fill out this field.</span>
+
+            <label for="company">Organization/Company Name</label>
+            <input type="text" id="company" required>
+            <span class="error" id="companyError">Please fill out this field.</span>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" required>
+            <span class="error" id="emailError">Please enter a valid email address.</span>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" required>
+            <span class="error" id="passwordError">Password must be at least 8 characters.</span>
+            <div class="password-strength" id="passwordStrength">Strength: Weak</div>
+
+            <button type="submit" class="btn">Sign Up</button>
+        </form>
+
+        <div id="formMessage" class="message hidden"></div>
+
+        <div class="login-link">
+            Already have an account? <a href="http://127.0.0.1:5000/login">Log in</a>
+        </div>
+    </div>
+
+    <script>
+        // Password strength checker
+        document.getElementById("password").addEventListener("input", function() {
+            let password = this.value;
+            let strengthText = document.getElementById("passwordStrength");
+
+            if (password.length >= 12 && /[A-Z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)) {
+                strengthText.textContent = "Strength: Strong";
+                strengthText.style.color = "green";
+            } else if (password.length >= 8) {
+                strengthText.textContent = "Strength: Medium";
+                strengthText.style.color = "orange";
+            } else {
+                strengthText.textContent = "Strength: Weak";
+                strengthText.style.color = "red";
+            }
+        });
+
+        // Form validation and backend submission
+        document.getElementById("signupForm").addEventListener("submit", async function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            let valid = true;
+            const formMessage = document.getElementById("formMessage");
+            formMessage.classList.add('hidden'); // Hide previous messages
+
+            // Get input values
+            let firstName = document.getElementById("firstName").value.trim();
+            let lastName = document.getElementById("lastName").value.trim();
+            let company = document.getElementById("company").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let password = document.getElementById("password").value;
+
+            // Clear all previous errors
+            document.querySelectorAll('.error').forEach(e => e.style.display = 'none');
+
+            // Client-side validation
+            if (firstName === "") {
+                document.getElementById("firstNameError").style.display = "block";
+                valid = false;
+            }
+            if (lastName === "") {
+                document.getElementById("lastNameError").style.display = "block";
+                valid = false;
+            }
+            if (company === "") {
+                document.getElementById("companyError").style.display = "block";
+                valid = false;
+            }
+
+            let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailPattern.test(email)) {
+                document.getElementById("emailError").textContent = "Please enter a valid email address.";
+                document.getElementById("emailError").style.display = "block";
+                valid = false;
+            }
+
+            if (password.length < 8) {
+                document.getElementById("passwordError").textContent = "Password must be at least 8 characters.";
+                document.getElementById("passwordError").style.display = "block";
+                valid = false;
+            }
+
+            if (!valid) {
+                formMessage.textContent = "Please correct the errors in the form.";
+                formMessage.classList.remove('hidden');
+                formMessage.classList.remove('success');
+                formMessage.classList.add('error');
+                return; // Stop if client-side validation fails
+            }
+
+            // If client-side validation passes, send to backend
+            try {
+                const response = await fetch('http://127.0.0.1:5000/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        firstName: firstName,
+                        lastName: lastName,
+                        company: company,
+                        email: email,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) { // Status 200-299
+                    formMessage.textContent = data.message;
+                    formMessage.classList.remove('hidden', 'error');
+                    formMessage.classList.add('success');
+                    // Clear the form after successful submission
+                    this.reset();
+                    document.getElementById("passwordStrength").textContent = "Strength: Weak";
+                    document.getElementById("passwordStrength").style.color = "red";
+                    // Optional: Redirect to login after a delay
+                    setTimeout(() => {
+                        window.location.href = "http://127.0.0.1:5000/login";
+                    }, 2000); // Redirect after 2 seconds
+                } else {
+                    // Handle errors from the backend (e.g., email already exists)
+                    formMessage.textContent = data.message || "An error occurred during registration.";
+                    formMessage.classList.remove('hidden', 'success');
+                    formMessage.classList.add('error');
+                }
+            } catch (error) {
+                console.error('Error during registration:', error);
+                formMessage.textContent = "Network error. Please try again later.";
+                formMessage.classList.remove('hidden', 'success');
+                formMessage.classList.add('error');
+            }
+        });
+    </script>
+</body>
+</html>

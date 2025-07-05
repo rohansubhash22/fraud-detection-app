@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Detection Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fb961a, #fada26);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-box {
+            background: rgba(221, 152, 14, 0.2);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .login-box h1 {
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+        .login-box input {
+            width: 90%;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border-radius: 10px;
+            font-size: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            outline: none;
+        }
+        .login-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .login-box button {
+            margin-top: 1rem;
+            background: linear-gradient(to right, #f49a2d, #f8ee82);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+        }
+        .login-box button:hover {
+            background: linear-gradient(to right, #f85032, #e73827);
+            transform: scale(1.05);
+        }
+        .error-message {
+            color: black;
+            margin-top: 10px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        h5 {
+            margin-top: 1.5rem;
+	   
+            font-size: 0.9em;
+        }
+        h5 a {
+            color: blue;
+            text-decoration: underline;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <form id="loginForm">
+        <div class="login-box">
+            <h1>Welcome to Fraud Detection</h1>
+            <input type="email" id="username" placeholder="Enter your registered email" required> <input type="password" id="password" placeholder="Enter your password" required>
+            <button type="submit">Login</button>
+            <div id="loginError" class="error-message"></div>
+            <h5>To create an account <a href="http://127.0.0.1:5000/signup">Sign Up</a></h5> </div>
+    </form>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const username = document.getElementById("username").value.trim(); // This is the email
+            const password = document.getElementById("password").value.trim();
+            const loginError = document.getElementById("loginError");
+
+            loginError.textContent = ""; // Clear previous errors
+
+            if (!username || !password) {
+                loginError.textContent = "Please enter both email and password.";
+                return;
+            }
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/authenticate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username: username, password: password }) // username here is email
+                });
+
+                const data = await response.json();
+
+                if (response.ok) { // Check if the response status is 200 OK
+                    // Login successful, backend has set session
+                    window.location.href = "http://127.0.0.1:5000/main"; // Redirect to main app page
+                } else {
+                    // Login failed
+                    loginError.textContent = data.message || "Login failed. Please try again.";
+                }
+            } catch (error) {
+                console.error('Error during login:', error);
+                loginError.textContent = "An error occurred. Please try again later.";
+            }
+        });
+    </script>
+</body>
+</html>
