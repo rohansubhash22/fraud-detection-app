@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fraud Detection System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlalHmgz6qK/yB6W4m6qU/tA0wF8M5L5j7zF8d5/hL4u4a8p+l7+m+8w+xGgV2D3C/XQ/w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        /* Basic styles (mostly from your previous code) */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -21,24 +23,6 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             position: relative;
         }
-        .top-right-auth {
-            position: absolute;
-            top: 15px;
-            right: 40px;
-            display: flex;
-            gap: 15px;
-        }
-        .top-right-auth a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 5px 10px;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-        }
-        .top-right-auth a:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
         .app-title {
             font-size: 2.5em;
             margin-top: 10px;
@@ -47,8 +31,8 @@
         }
         .nav-buttons-container {
             display: flex;
-            flex-wrap: wrap; /* Allow buttons to wrap */
-            justify-content: center; /* Center buttons horizontally */
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 15px;
             margin-top: 10px;
         }
@@ -82,7 +66,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         .hidden {
-            display: none;
+            display: none !important; /* Use !important to ensure hiding */
         }
 
         h2 {
@@ -114,37 +98,17 @@
             min-height: 80px;
             resize: vertical;
         }
-         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #0056b3;
-            margin-bottom: 30px;
-        }
         .input-section {
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
+            align-items: center;
         }
-        input[type="text"] {
+        #urlInput {
             flex-grow: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
+            min-width: 200px;
         }
+
         button {
             padding: 12px 20px;
             background-color: #007bff;
@@ -154,6 +118,7 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s ease;
+            white-space: nowrap;
         }
         button:hover {
             background-color: #0056b3;
@@ -173,11 +138,11 @@
             color: #0056b3;
         }
         .fraudulent {
-            color: #dc3545; /* Red for fraudulent */
+            color: #dc3545;
             font-weight: bold;
         }
         .not-fraudulent {
-            color: #28a745; /* Green for not fraudulent */
+            color: #28a745;
             font-weight: bold;
         }
         .reasons-list {
@@ -189,8 +154,8 @@
         .reasons-list li {
             margin-bottom: 5px;
         }
-        #loadingSpinner {
-            display: none; /* Hidden by default */
+        .loadingSpinner {
+            display: none;
             border: 4px solid #f3f3f3;
             border-top: 4px solid #007bff;
             border-radius: 50%;
@@ -198,6 +163,7 @@
             height: 20px;
             animation: spin 1s linear infinite;
             margin-left: 10px;
+            vertical-align: middle;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -209,7 +175,6 @@
             font-weight: bold;
         }
 
-        /* Checkbox styling for Identity Theft */
         .checkbox-group {
             margin-bottom: 15px;
         }
@@ -220,7 +185,7 @@
         }
         .checkbox-group input[type="checkbox"] {
             margin-right: 10px;
-            transform: scale(1.2); /* Make checkbox slightly larger */
+            transform: scale(1.2);
         }
         .success-message {
             color: #28a745;
@@ -233,13 +198,102 @@
             text-align: center;
         }
 
+        /* Styles for the Top-Right Auth Section with Default Icon */
+        .top-right-auth {
+            position: absolute;
+            top: 15px;
+            right: 40px;
+        }
+
+        .user-profile-dropdown {
+            position: relative;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .user-info-trigger {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            color: white;
+            font-weight: bold;
+        }
+        .user-info-trigger:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .user-icon {
+            font-size: 1.8em;
+            color: white;
+        }
+        .welcome-message {
+            color: white;
+            font-weight: bold;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #0056b3;
+            min-width: 120px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            right: 0;
+            border-radius: 4px;
+            overflow: hidden;
+            top: calc(100% + 5px);
+            white-space: nowrap;
+        }
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            transition: background-color 0.3s ease;
+        }
+        .dropdown-content a:hover {
+            background-color: #003d80;
+        }
+        .user-profile-dropdown.active .dropdown-content {
+            display: block;
+        }
+        /* Styles specific to About Us content */
+        .about-us-section p {
+            line-height: 1.6;
+            margin-bottom: 1em;
+            text-align: justify;
+        }
+        .about-us-section ul {
+            list-style-type: disc;
+            margin-left: 25px;
+            margin-bottom: 1em;
+        }
+        .about-us-section ul li {
+            margin-bottom: 0.5em;
+        }
+
     </style>
 </head>
 <body>
     <div class="header-container">
         <div class="top-right-auth">
-            <a href="#" class="auth-link">Login</a>
-            <a href="#" class="auth-link">Sign Up</a>
+            <div id="userProfile" class="user-profile-dropdown">
+                <div class="user-info-trigger">
+                    <i class="fas fa-user-circle user-icon"></i> {% if session.logged_in %}
+                        <span class="welcome-message">{{ session.user_first_name }}</span>
+                    {% endif %}
+                </div>
+                <div class="dropdown-content">
+                    {% if session.logged_in %}
+                        <a href="http://127.0.0.1:5000/logout" class="auth-link logout-button">Logout</a>
+                    {% else %}
+                        <a href="http://127.0.0.1:5000/login" class="auth-link">Login</a>
+                        <a href="http://127.0.0.1:5000/signup" class="auth-link">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
         <div class="app-title">Fraud Detection System</div>
         <div class="nav-buttons-container">
@@ -256,15 +310,15 @@
             <h2>URL Fraud Detection</h2>
 
             <div class="input-section">
-            <input type="text" id="urlInput" placeholder="Enter URL to analyze (e.g., https://www.google.com)">
-            <button onclick="analyzeUrl()">Analyze URL</button>
-            <div id="loadingSpinner"></div>
-        </div>
-
-        <div id="errorMessage" class="error-message"></div>
-
-        <div id="results" class="result-section">
+                <input type="text" id="urlInput" placeholder="Enter URL to analyze (e.g., https://www.google.com)">
+                <button onclick="analyzeUrl()">Analyze URL</button>
+                <div id="urlLoadingSpinner" class="loadingSpinner"></div>
             </div>
+
+            <div id="urlErrorMessage" class="error-message"></div>
+
+            <div id="urlResults" class="result-section">
+                </div>
         </div>
 
         <div id="transactionFraudContent" class="content-section hidden">
@@ -374,9 +428,25 @@
                 </div>
         </div>
 
-        <div id="aboutUsContent" class="content-section hidden">
+        <div id="aboutUsContent" class="content-section hidden about-us-section">
             <h2>About Our Fraud Detection System</h2>
-            <p>Learn more about our mission, technology, and team dedicated to combating fraud.</p>
+            <p>Welcome to our comprehensive Fraud Detection System, your trusted partner in combating the ever-evolving landscape of digital fraud. In an age where online threats are increasingly sophisticated, our mission is to provide individuals and businesses with robust tools to identify, prevent, and report fraudulent activities, ensuring a safer online environment for everyone.</p>
+
+            <h3>Our Mission</h3>
+            <p>Our core mission is to empower users with cutting-edge technology and actionable insights to protect themselves from financial scams, identity theft, and malicious online schemes. We strive to be a proactive defense mechanism, offering peace of mind in a complex digital world.</p>
+
+            <h3>How It Works</h3>
+            <p>Our application integrates advanced analytical techniques and a continuously updated knowledge base to offer multi-faceted fraud detection capabilities:</p>
+            <ul>
+                <li><strong>URL Detection:</strong> Analyzes website URLs for indicators of phishing, malware, and other malicious content, helping you avoid fraudulent sites.</li>
+                <li><strong>Transaction Fraud Detection:</strong> Evaluates transaction details (amount, location, card type) against patterns of known fraud, flagging suspicious financial activities.</li>
+                <li><strong>Identity Theft Indicators Check:</strong> Helps you assess your risk of identity theft by allowing you to report suspicious activities related to your personal information.</li>
+                <li><strong>Fraud Reporting:</strong> Provides a streamlined process for users to report fraudulent incidents they have encountered or witnessed, contributing to a collective defense network.</li>
+            </ul>
+
+            <h3>Our Commitment</h3>
+            <p>We are committed to continuous improvement, regularly updating our detection algorithms and threat intelligence to stay ahead of new fraud tactics. Your security and digital well-being are our top priorities.</p>
+            <p>Join us in building a more secure digital future. By using our system and reporting incidents, you contribute to a safer community for all.</p>
         </div>
     </div>
 
@@ -403,7 +473,7 @@
             }
         }
 
-        // --- URL Analysis Function (Updated Endpoint) ---
+        // --- URL Analysis Function ---
         async function analyzeUrl() {
             const urlInput = document.getElementById('urlInput');
             const url = urlInput.value.trim();
@@ -550,7 +620,7 @@
             resultsDiv.innerHTML = resultHtml;
         }
 
-        // --- NEW: Identity Theft Analysis Function ---
+        // --- Identity Theft Analysis Function ---
         async function checkIdentityTheft() {
             const indicators = {
                 unusual_credit_inquiry: document.getElementById('unusualCreditInquiry').checked,
@@ -568,7 +638,6 @@
             resultsDiv.innerHTML = '';
             errorMessage.textContent = '';
 
-            // Check if at least one checkbox is selected
             const anyChecked = Object.values(indicators).some(value => value === true);
             if (!anyChecked) {
                 errorMessage.textContent = 'Please select at least one indicator to check.';
@@ -623,7 +692,7 @@
             resultsDiv.innerHTML = resultHtml;
         }
 
-        // --- NEW: Report Fraud Function ---
+        // --- Report Fraud Function ---
         async function submitFraudReport() {
             const fraudType = document.getElementById('fraudType').value.trim();
             const fraudDate = document.getElementById('fraudDate').value.trim();
@@ -639,7 +708,6 @@
             successMessageDiv.classList.add('hidden');
             errorMessageDiv.textContent = '';
 
-            // Basic client-side validation
             if (!fraudType) {
                 errorMessageDiv.textContent = 'Please enter the type of fraud.';
                 return;
@@ -649,7 +717,7 @@
                 return;
             }
             if (!contactEmail && !contactPhone) {
-                errorMessageDiv.textContent = 'Please provide at least an email or phone number for follow-up.';
+                errorMessageDiv.textContent = 'At least one contact method (email or phone) is required.';
                 return;
             }
             if (contactEmail && !/\S+@\S+\.\S+/.test(contactEmail)) {
@@ -684,7 +752,6 @@
                 successMessageDiv.textContent = `Report submitted successfully! Your report ID is: ${data.report_id}`;
                 successMessageDiv.classList.remove('hidden');
 
-                // Optionally clear the form after successful submission
                 document.getElementById('fraudType').value = '';
                 document.getElementById('fraudDate').value = '';
                 document.getElementById('fraudDescription').value = '';
@@ -700,8 +767,7 @@
             }
         }
 
-
-        // --- JavaScript for Navigation (remains largely the same) ---
+        // --- JavaScript for Navigation & Dropdown ---
         document.addEventListener('DOMContentLoaded', () => {
             const navButtons = document.querySelectorAll('.nav-button');
 
@@ -716,6 +782,23 @@
             // Show the URL Detection section by default on page load
             const urlDetectionButton = document.querySelector('.nav-button[data-target="urlDetectionContent"]');
             showSection('urlDetectionContent', urlDetectionButton);
+
+            // Dropdown toggle for user profile icon
+            const userProfileDropdown = document.getElementById('userProfile');
+            if (userProfileDropdown) {
+                const userInfoTrigger = userProfileDropdown.querySelector('.user-info-trigger');
+                userInfoTrigger.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    userProfileDropdown.classList.toggle('active');
+                });
+
+                // Close the dropdown if clicked anywhere else on the window
+                window.addEventListener('click', (event) => {
+                    if (userProfileDropdown.classList.contains('active') && !userProfileDropdown.contains(event.target)) {
+                        userProfileDropdown.classList.remove('active');
+                    }
+                });
+            }
         });
     </script>
 </body>
