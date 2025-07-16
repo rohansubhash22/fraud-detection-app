@@ -3,127 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fraud Detection Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <title>Login - Fraud Detection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            margin: 0;
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #fb961a, #fada26);
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            background-color: #f0f2f5;
         }
-        .login-box {
-            background: rgba(221, 152, 14, 0.2);
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+        .container {
+            max-width: 400px;
         }
-        .login-box h1 {
-            margin-bottom: 1rem;
-            font-size: 2rem;
+        .form-input {
+            border: 1px solid #d1d5db;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            width: 100%;
+            box-sizing: border-box;
         }
-        .login-box input {
-            width: 90%;
-            padding: 0.8rem;
-            margin: 0.5rem 0;
-            border-radius: 10px;
-            font-size: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
+        .form-button {
+            background-color: #4f46e5;
             color: white;
-            outline: none;
-        }
-        .login-box input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-        .login-box button {
-            margin-top: 1rem;
-            background: linear-gradient(to right, #f49a2d, #f8ee82);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            width: 100%;
             cursor: pointer;
-            transition: transform 0.3s, background 0.3s;
+            transition: background-color 0.3s ease;
         }
-        .login-box button:hover {
-            background: linear-gradient(to right, #f85032, #e73827);
-            transform: scale(1.05);
-        }
-        .error-message {
-            color: black;
-            margin-top: 10px;
-            font-size: 0.9em;
-            font-weight: bold;
-        }
-        h5 {
-            margin-top: 1.5rem;
-	   
-            font-size: 0.9em;
-        }
-        h5 a {
-            color: blue;
-            text-decoration: underline;
-            font-weight: 600;
+        .form-button:hover {
+            background-color: #4338ca;
         }
     </style>
 </head>
-<body>
-    <form id="loginForm">
-        <div class="login-box">
-            <h1>Welcome to Fraud Detection</h1>
-            <input type="email" id="username" placeholder="Enter your registered email" required> <input type="password" id="password" placeholder="Enter your password" required>
-            <button type="submit">Login</button>
-            <div id="loginError" class="error-message"></div>
-            <h5>To create an account <a href="http://127.0.0.1:5000/signup">Sign Up</a></h5> </div>
-    </form>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="container bg-white p-8 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Login</h2>
+        <div id="message" class="mb-4 p-3 rounded-md text-sm text-center hidden"></div>
+        <form id="loginForm">
+            <div class="mb-4">
+                <label for="username" class="block text-gray-700 text-sm font-medium mb-2">Email</label>
+                <input type="email" id="username" name="username" class="form-input" required>
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700 text-sm font-medium mb-2">Password</label>
+                <input type="password" id="password" name="password" class="form-input" required>
+		<p class="text-center text-sm text-gray-600 mt-2">
+                <a href="/forgot_password" class="text-indigo-600 hover:underline">Forgot Password?</a>
+                </p>
+            </div>
+            <button type="submit" class="form-button">Login</button>
+        </form>
+        <p class="text-center text-sm text-gray-600 mt-4">
+            Don't have an account? <a href="/signup" class="text-indigo-600 hover:underline">Sign Up</a>
+        </p>
+        
+    </div>
 
     <script>
-        document.getElementById("loginForm").addEventListener("submit", async function(event) {
-            event.preventDefault(); // Prevent default form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
 
-            const username = document.getElementById("username").value.trim(); // This is the email
-            const password = document.getElementById("password").value.trim();
-            const loginError = document.getElementById("loginError");
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const messageDiv = document.getElementById('message');
 
-            loginError.textContent = ""; // Clear previous errors
-
-            if (!username || !password) {
-                loginError.textContent = "Please enter both email and password.";
-                return;
-            }
+            messageDiv.textContent = '';
+            messageDiv.className = 'mb-4 p-3 rounded-md text-sm text-center hidden';
 
             try {
-                const response = await fetch('http://127.0.0.1:5000/authenticate', {
+                const response = await fetch('/authenticate', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ username: username, password: password }) // username here is email
+                    body: JSON.stringify({ username, password })
                 });
 
                 const data = await response.json();
 
-                if (response.ok) { // Check if the response status is 200 OK
-                    // Login successful, backend has set session
-                    window.location.href = "http://127.0.0.1:5000/main"; // Redirect to main app page
+                if (response.ok) {
+                    messageDiv.classList.remove('hidden');
+                    messageDiv.classList.add('bg-green-100', 'text-green-700');
+                    messageDiv.textContent = data.message;
+                    window.location.href = '/main'; // Redirect to main app page on success
                 } else {
-                    // Login failed
-                    loginError.textContent = data.message || "Login failed. Please try again.";
+                    messageDiv.classList.remove('hidden');
+                    messageDiv.classList.add('bg-red-100', 'text-red-700');
+                    messageDiv.textContent = data.message || 'Login failed. Please try again.';
                 }
             } catch (error) {
-                console.error('Error during login:', error);
-                loginError.textContent = "An error occurred. Please try again later.";
+                console.error('Error:', error);
+                messageDiv.classList.remove('hidden');
+                messageDiv.classList.add('bg-red-100', 'text-red-700');
+                messageDiv.textContent = 'An error occurred. Please try again later.';
             }
         });
+
+        // Display flash messages if any
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const flashMessage = urlParams.get('flash');
+            if (flashMessage) {
+                const messageDiv = document.getElementById('message');
+                messageDiv.classList.remove('hidden');
+                messageDiv.classList.add('bg-blue-100', 'text-blue-700');
+                messageDiv.textContent = decodeURIComponent(flashMessage);
+            }
+        };
     </script>
 </body>
 </html>
